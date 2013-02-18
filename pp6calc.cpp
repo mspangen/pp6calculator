@@ -1,4 +1,11 @@
 #include <iostream>
+#include <climits>
+
+void input_error()
+{
+	std::cin.clear();
+	std::cin.ignore(INT_MAX, '\n');
+}
 
 int main()
 {
@@ -8,32 +15,46 @@ int main()
 	double c;
 	std::string operation;
 
-	std::cout << "Choose operation [add (a), subtract (s), multiply (m), divide (d)]:\n";
-	std::cin >> operation;
-
-	std::cout << "Please enter number A:\n";
-	std::cin >> a;
-	std::cout << "Please enter number B:\n";	
-	std::cin >> b;
-
-	if (!std::cin)
+	while (true)
 	{
-		std::cout << "Error in input! \n";
-		return 0;
-	}
 
-	if (operation == "a") {
-		std::cout << "A+B = " << a+b << std::endl;
-	} else if (operation == "s") {
-		std::cout << " A-B = " << a-b << std::endl;
-	} else if (operation == "m") {
-		std::cout << "A*B = " << a*b << std::endl;
-	} else if (operation == "d") { 
-		if (b == 0) {
-			std::cout << "Division by zero!\n";
-			return 0;
+		std::cout << "Choose operation [add (a), subtract (s), multiply (m), divide (d)]:\n";
+		std::cin >> operation;
+
+		std::cout << "Please enter number A:\n";
+		std::cin >> a;
+		std::cout << "Please enter number B:\n";	
+		std::cin >> b;
+
+		if (!std::cin)
+		{
+			std::cout << "Error in input! \n";
+			input_error();
+			continue;
 		}
-		std::cout << "A/B = " << a/b << std::endl;
+
+		if (operation == "a") {
+			std::cout << "A+B = " << a+b << std::endl;
+		} else if (operation == "s") {
+			std::cout << " A-B = " << a-b << std::endl;
+		} else if (operation == "m") {
+			std::cout << "A*B = " << a*b << std::endl;
+		} else if (operation == "d") { 
+			if (b == 0) {
+				std::cout << "Division by zero!\n";
+				input_error();
+				continue;
+			}
+			std::cout << "A/B = " << a/b << std::endl;
+		} else if (operation == "q") {
+			break;
+		}
+		else {
+			std::cout << "Error in operation choice!\n";
+			input_error();
+			continue;
+		}
+
 	}
 
 	return 0;
