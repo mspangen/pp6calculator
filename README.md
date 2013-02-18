@@ -13,4 +13,4 @@ pp6calculator is distributed under the terms of the Boost Software Licence.
 
 Installation
 ------------
-
+Test
