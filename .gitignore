@@ -1,0 +1,13 @@
+# Text editor temporaries
+*~
+*.swp
+
+# Mac filesystem
+.DS_Store?
+
+# Compiled sources
+*.o
+*.so
+*.a
+*.dylib
+*.pyg
