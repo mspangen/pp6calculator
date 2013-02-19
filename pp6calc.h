@@ -7,12 +7,12 @@ double Subtract (double, double);
 double Multiply (double, double);
 double Divide (double, double);
 double Intercept (double, double);
-double Poly2Solve (double, double, double);
+std::vector<double> Poly2Solve (double, double, double);
 double Vector3Length (double, double, double);
 double Vector4Length (double, double, double, double);
 double InvMass (double, double, double);
 
-
+void helptext();
 
 
 
