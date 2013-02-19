@@ -11,3 +11,9 @@
 *.a
 *.dylib
 *.pyg
+
+#ssh key
+*.ppk
+
+#Folder for Visual Studio project
+Visual_Studio_project
