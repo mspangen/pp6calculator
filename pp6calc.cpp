@@ -96,23 +96,19 @@ int main(int argc, char* argv[])
 		}
 
 		else if (operation == "im") {
-		//	double result = InvariantMass(vars.at(0),vars.at(1),vars.at(2),vars.at(3),...);
-		//	std::cout << "Invariant mass of particles M = " << result << std::endl;
+			double result = InvMass(vars.at(0),vars.at(1),vars.at(2),vars.at(3),vars.at(4));
+			std::cout << "Invariant mass of particles M = " << result << std::endl;
 		}
 
 		else if (operation == "q") {
 			break;
 		}
 
-
-
-
 	}
 
 	return 0;
 
 }
-
 
 
 
@@ -159,8 +155,8 @@ std::vector<double> get_user_input(std::string operation)
 		prompt_text = "Size of 4-vector (v0,v1,v2,v3). Enter as v0,v1,v2,v3:";
 		nvars = 4;
 	} else if (operation == "im") {
-		prompt_text = "Invariant mass of particle pair. Enter as E1,E2,"; // ???
-		nvars = 4; // ???
+		prompt_text = "Invariant mass of particle pair. Enter as m1,m2,p1,p2,phi:";
+		nvars = 5;
 	}
 	
 	std::cout << prompt_text << std::endl;
@@ -292,40 +288,14 @@ double Size4Vec(double v0, double v1, double v2, double v3) // Size of 4-vector
 	}
 }
 
-
-
-/*
-// Calculate the intercept of a line on the x-axis
-double Intercept (double a, double b) //a*x+b
+double InvMass (double m1, double m2, double p1, double p2, double phi_deg)
 {
-	return 0;
+	double E1 = sqrt(p1*p1 + m1*m1);
+	double E2 = sqrt(p2*p2 + m2*m2);
+	double pi = 3.14159265358979323846;
+	double phi_rad = phi_deg/180*pi;
+	return sqrt( m1*m1 + m2*m2 + 2*(E1*E2 - p1*p2*cos(phi_rad)) ); 
 }
-
-// Solve quadratic equation
-double Poly2Solve (double a, double b, double c)
-{
-	return 0;
-}
-
-// Calculate length of 3-vector
-double Vector3Length (double v1, double v2, double v3)
-{
-	return 0;
-}
-
-// Calculate length of 4-vector
-double Vector4Length (double v1, double v2, double v3)
-{
-	return 0;
-}
-
-// Calculate invariant mass of particle
-double InvMass (double m1, double m2, double angle)
-{
-	return 0;
-}
-
-*/
 
 
 //==================================

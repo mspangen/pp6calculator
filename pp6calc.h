@@ -13,7 +13,7 @@ double Intercept (double, double);
 std::vector<double> Poly2Solve (double, double, double);
 double Size3Vec (double, double, double);
 double Size4Vec (double, double, double, double);
-double InvMass (double, double, double);
+double InvMass (double, double, double, double, double);
 
 void helptext();
 
