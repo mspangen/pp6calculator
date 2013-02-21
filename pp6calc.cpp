@@ -12,7 +12,7 @@
 int main(int argc, char* argv[])
 {
 
-	if (argc == 1 && argv[1] == "-h") {
+	if (argc == 2 && argv[1] == "-h") {
 		helptext();
 		return 0;
 	}
@@ -302,7 +302,7 @@ double InvMass (double m1, double m2, double p1, double p2, double phi_deg)
 // Help text
 //==================================
 
-//Write help text to be output when running program with -h
+//Write help text to output when running program with -h
 void helptext()
 {
 	std::cout << "========================\n";
@@ -310,10 +310,13 @@ void helptext()
 	std::cout << "========================\n";
 	std::cout << "Enter the operation that you want to perform when prompted.\n";
 	std::cout << "   Available operations:\n";
-	std::cout << "   (a)  Addition a+b, (s) Subtraction a-b, (m) Multiplication a*b, (d) Division a/b,\n";
+	std::cout << "   (a)  Addition a+b,\n";
+	std::cout << "   (s)  Subtraction a-b,\n";
+	std::cout << "   (m)  Multiplication a*b,\n";
+	std::cout << "   (d)  Division a/b,\n";
 	std::cout << "   (i)  Find intercept of straight line a*x+b with x-axis,\n";
 	std::cout << "   (p)  Solve 2nd degree polynomial a*x^2 + b*x + c = 0,\n";
 	std::cout << "   (v3) Calculate size of 3-vector (a, b, c),\n";
 	std::cout << "   (v4) Calculate size of 4-vector (a, b, c, d) assuming metric (1, -1, -1, -1),\n";
-	std::cout << "   (im) Calculate invariant mass of particle pair using their energies, momenta and masses.\n";
+	std::cout << "   (im) Calculate invariant mass of particle pair using their momenta, masses and their mutual angle.\n";
 }
