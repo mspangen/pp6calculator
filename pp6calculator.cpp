@@ -1,13 +1,11 @@
 #include <iostream>
-#include <sstream>
-#include <climits>
-#include <cmath>
 #include <string>
 #include <vector>
 #include <set>
-#include <algorithm>
 
-#include "pp6calc.h" // Include header file to forward declare functions
+#include "pp6calculator.hpp"
+#include "pp6lib/pp6math.hpp"
+#include "pp6lib/string_interpret.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -20,8 +18,8 @@ int main(int argc, char* argv[])
 	std::string operation; // Variable to store operation chosen by user
 
 	//Define set of available operations
-	const int Noperations = 10;
-	std::string valid_operations[Noperations] = {"q","a","s","m","d","i","p","v3","v4","im"};
+	const int Noperations = 11;
+	std::string valid_operations[Noperations] = {"q","a","s","m","d","i","p","v3","v4","im","sort"};
 	std::set<std::string> valid_operations_set (valid_operations,valid_operations+Noperations); // Set of valid operations
 
 	while (true) // Loop over calculator menu until user quits with "q"
@@ -101,9 +99,20 @@ int main(int argc, char* argv[])
 			std::cout << "Invariant mass of particles M = " << result << std::endl;
 		}
 
+		else if (operation == "sort") {
+			BubbleSort(vars);
+			std::cout << "Sorted array: " << vars[0];
+			for (int i=1; i<vars.size(); ++i) {
+				std::cout << "," << vars[i];
+			}
+			std::cout << std::endl;
+		}
+
 		else if (operation == "q") {
 			break;
 		}
+
+		std::cout << "=================" << std::endl;
 
 	}
 
@@ -112,10 +121,9 @@ int main(int argc, char* argv[])
 }
 
 
-
-//==================================
-// Functions for calculator
-//==================================
+//=====================================
+// Other functions
+//=====================================
 
 // Function to call whenever an input exception is found
 void input_error()
@@ -123,6 +131,7 @@ void input_error()
 	std::cin.clear();
 	std::cin.ignore(INT_MAX, '\n');
 }
+
 
 // Function to get user input
 std::vector<double> get_user_input(std::string operation)
@@ -158,6 +167,9 @@ std::vector<double> get_user_input(std::string operation)
 	} else if (operation == "im") {
 		prompt_text = "Invariant mass of particle pair. Enter as m1,m2,p1,p2,phi:";
 		nvars = 5;
+	} else if (operation == "sort") {
+		prompt_text = "Sort array a[N] of numbers in descending order. Input as a0,a1,a2,...:";
+		nvars = -1; // Set to -1 since we don't know the size of the array to sort
 	}
 	
 	std::cout << prompt_text << std::endl;
@@ -169,142 +181,16 @@ std::vector<double> get_user_input(std::string operation)
 		input_error();
 	}
 	else {
-		interpret_input(input,variables);
+		string_interpret(input,variables);
 	}
 
-	if (!(variables.size() == nvars)) {
+	if (variables.size() != nvars && nvars != -1) {
 		variables.clear();
 	}
 
 	return variables;
 
 }
-
-// Function to interpret input string
-// This splits comma separated string into input variables
-void interpret_input (std::string input, std::vector<double>& variables)
-{
-	size_t lastfound = -1;
-	size_t found;
-	std::string variable;
-	double doublevar;
-	std::string error_msg; // Error message if error found in variable
-
-	while (true) {
-		found = input.find(",",lastfound+1); // Position of comma in string
-		if (found != std::string::npos) { // Check if a comma was found. If not, found==std::string::npos
-			variable = input.substr(lastfound+1,found-(lastfound+1));
-		} else {
-			variable = input.substr(lastfound+1,input.length()-(lastfound+1));
-		}
-
-		lastfound = found; // Update position of last found comma
-
-		// Check if the variable is a valid number
-		if (variable.empty()) error_msg = "Empty variable!";
-		else if (variable.find_first_not_of("0123456789.-") != std::string::npos) error_msg = "Invalid characters!";
-		else if (std::count(variable.begin(), variable.end(),'.') > 1) error_msg = "Too many periods!";
-		else if (variable.find_first_of("-",1) != std::string::npos) error_msg = "Minus sign inside number!";
-
-		if (!error_msg.empty())	{ // If errors are found clear variable vector and exit loop
-			variables.clear();
-			std::cout << error_msg << std::endl;
-			break;
-		}
-
-		std::stringstream convert(variable);
-		convert >> doublevar; // Convert variable string to double
-
-		variables.push_back(doublevar);
-
-		if (found == std::string::npos) break;
-	}
-
-}
-
-
-//-------------------
-// Math functions
-//-------------------
-
-double Add (double a, double b)
-{
-	return a+b;
-}
-
-double Subtract (double a, double b)
-{
-	return a-b;
-}
-
-double Multiply (double a, double b)
-{
-	return a*b;
-}
-
-double Divide (double a, double b)
-{
-	return a/b;
-}
-
-double Intercept (double a, double b)
-{
-	return -b/a;
-}
-
-void Poly2Solve (double a, double b, double c, std::vector<double>& solutions)
-{
-	double d = b*b - 4*a*c; // Discriminant
-
-	if (a == 0 && b != 0) {
-		solutions.push_back(-c/b);
-	}	else if (d > 0 && a != 0) {
-		solutions.push_back( (-b + sqrt(d))/(2*a) );
-		solutions.push_back( (-b - sqrt(d))/(2*a) );
-	} else if (d == 0 && a != 0) {
-		solutions.push_back(-b/(2*a));
-	}
-
-}
-
-double Size3Vec (double v1, double v2, double v3) // Size of 3-vector
-{
-	return sqrt(v1*v1 + v2*v2 + v3*v3);
-}
-
-double Size4Vec(double v0, double v1, double v2, double v3) // Size of 4-vector
-{
-	double square = v0*v0 - v1*v1 - v2*v2 - v3*v3; // We assume metric (+1,-1,-1,-1)
-
-	if (square >= 0) {
-		return sqrt(square);
-	}	else {
-		return -1;
-	}
-}
-
-double InvMass (double m1, double m2, double p1, double p2, double phi_deg)
-{
-	double E1 = sqrt(p1*p1 + m1*m1);
-	double E2 = sqrt(p2*p2 + m2*m2);
-	double pi = 3.14159265358979323846;
-	double phi_rad = phi_deg/180*pi;
-	return sqrt( m1*m1 + m2*m2 + 2*(E1*E2 - p1*p2*cos(phi_rad)) ); 
-}
-
-
-
-//==================================
-// Other functions
-//==================================
-
-void swap(double& a, double& b)
-{
-	double temp = b;
-	b = a;
-	a = temp;
-}
-
 
 
 //==================================
