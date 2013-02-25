@@ -7,13 +7,15 @@
 #include "pp6lib/pp6math.hpp"
 #include "pp6lib/string_interpret.hpp"
 
-int main(int argc, char* argv[])
+int main(/*int argc, char* argv[]*/)
 {
 
+/*
 	if (argc == 2 && argv[1] == "-h") {
 		helptext();
 		return 0;
 	}
+*/
 
 	std::string operation; // Variable to store operation chosen by user
 
@@ -102,7 +104,7 @@ int main(int argc, char* argv[])
 		else if (operation == "sort") {
 			BubbleSort(vars);
 			std::cout << "Sorted array: " << vars[0];
-			for (int i=1; i<vars.size(); ++i) {
+			for (unsigned int i=1; i<vars.size(); ++i) {
 				std::cout << "," << vars[i];
 			}
 			std::cout << std::endl;
@@ -184,7 +186,7 @@ std::vector<double> get_user_input(std::string operation)
 		string_interpret(input,variables);
 	}
 
-	if (variables.size() != nvars && nvars != -1) {
+	if (variables.size() != (unsigned)nvars && nvars != -1) {
 		variables.clear();
 	}
 
