@@ -10,10 +10,12 @@ double Subtract (double, double);
 double Multiply (double, double);
 double Divide (double, double);
 double Intercept (double, double);
-std::vector<double> Poly2Solve (double, double, double);
+void Poly2Solve (double, double, double, std::vector<double>&);
 double Size3Vec (double, double, double);
 double Size4Vec (double, double, double, double);
 double InvMass (double, double, double, double, double);
+
+void swap(double&, double&);
 
 void helptext();
 

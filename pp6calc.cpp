@@ -70,7 +70,8 @@ int main(int argc, char* argv[])
 		}
 		
 		else if (operation == "p") {
-			std::vector<double> solutions = Poly2Solve(vars.at(0),vars.at(1),vars.at(2));
+			std::vector<double> solutions;
+			Poly2Solve(vars.at(0),vars.at(1),vars.at(2),solutions);
 			std::cout << "Solution to 2nd degree polynomium " << vars.at(0) << "*x^2+" << vars.at(1) << "*x+" << vars.at(2) << "=0:\n";
 			for (unsigned int i=0; i<solutions.size(); ++i)
 			{
@@ -168,7 +169,7 @@ std::vector<double> get_user_input(std::string operation)
 		input_error();
 	}
 	else {
-		variables = interpret_input(input);
+		interpret_input(input,variables);
 	}
 
 	if (!(variables.size() == nvars)) {
@@ -181,9 +182,8 @@ std::vector<double> get_user_input(std::string operation)
 
 // Function to interpret input string
 // This splits comma separated string into input variables
-std::vector<double> interpret_input (std::string input)
+void interpret_input (std::string input, std::vector<double>& variables)
 {
-	std::vector<double> variables; // Vector of variables to output
 	size_t lastfound = -1;
 	size_t found;
 	std::string variable;
@@ -220,8 +220,6 @@ std::vector<double> interpret_input (std::string input)
 		if (found == std::string::npos) break;
 	}
 
-	return variables;
-
 }
 
 
@@ -254,9 +252,8 @@ double Intercept (double a, double b)
 	return -b/a;
 }
 
-std::vector<double> Poly2Solve (double a, double b, double c)
+void Poly2Solve (double a, double b, double c, std::vector<double>& solutions)
 {
-	std::vector<double> solutions;
 	double d = b*b - 4*a*c; // Discriminant
 
 	if (a == 0 && b != 0) {
@@ -267,8 +264,6 @@ std::vector<double> Poly2Solve (double a, double b, double c)
 	} else if (d == 0 && a != 0) {
 		solutions.push_back(-b/(2*a));
 	}
-
-	return solutions;
 
 }
 
@@ -296,6 +291,20 @@ double InvMass (double m1, double m2, double p1, double p2, double phi_deg)
 	double phi_rad = phi_deg/180*pi;
 	return sqrt( m1*m1 + m2*m2 + 2*(E1*E2 - p1*p2*cos(phi_rad)) ); 
 }
+
+
+
+//==================================
+// Other functions
+//==================================
+
+void swap(double& a, double& b)
+{
+	double temp = b;
+	b = a;
+	a = temp;
+}
+
 
 
 //==================================
