@@ -15,8 +15,5 @@
 #ssh key
 *.ppk
 
-#CMake file
-CMakeLists.txt
-
 #Folder for Visual Studio project
 Visual_Studio_project
