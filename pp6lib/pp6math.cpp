@@ -115,7 +115,7 @@ void BubbleSortIndex(std::vector<double> a, std::vector<int>& indexvec)
 	int size = _a.size();
 
 	indexvec.clear();
-	for (unsigned int i=0; i<size; ++i) {
+	for (int i=0; i<size; ++i) {
 		indexvec.push_back(i);
 	}
 

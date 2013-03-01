@@ -300,9 +300,9 @@ void MenuWeek3()
 	std::cout << "e) Generate 100 energies and 3-momenta and output\n";
 	std::cout << "   the mean energy and its standard deviation\n";
 	std::cout << "m) Read file containing particle data, calculate\n";
-	std::cout << "   invarant masses of all pairs of mu+,mu- and\n";
-	std::cout << "   output the 10 largest values and the muons they\n";
-	std::cout << "   were calculated from\n";
+	std::cout << "   invarant masses of all pairs of mu+,mu- from\n";
+	std::cout << "   run4.dat and output the 10 largest values and\n";
+	std::cout << "   the muons they were calculated from\n";
 	std::cout << "q) Quit to main menu\n";
 	std::cout << "--------------------------------------------------\n";
 

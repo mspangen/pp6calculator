@@ -12,16 +12,19 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 # Tell compiler where to find headers
-include_directories(pp6lib)
+include_directories(pp6lib filereader)
 
 # Add the pp6lib library
 add_subdirectory(pp6lib)
 
+# Add the filereader library
+add_subdirectory(filereader)
+
 # Add the pp6calculator program
 add_executable(pp6calculator pp6calculator.cpp)
 
-# Link pp6calculator to the pp6lib library
-target_link_libraries(pp6calculator pp6lib)
+# Link pp6calculator to the pp6lib and filereader libraries
+target_link_libraries(pp6calculator pp6lib filereader)
 
 # Install pp6calculator to the bin subdirectory of CMAKE_INSTALL_PREFIX
 install(TARGETS pp6calculator DESTINATION bin)

@@ -4,9 +4,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <cstdlib>
 #include <ctime>
-#include "filereader\FileReader.hpp"
+#include "filereader/FileReader.hpp"
 
 void input_error();
 int get_user_input(int nvars, std::vector<double>& variables);

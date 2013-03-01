@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <cmath>
+#include <cstdlib>
 
 // Arithmetic
 double Add (double a, double b);
