@@ -65,13 +65,12 @@ double Size4Vec(double v0, double v1, double v2, double v3) // Size of 4-vector
 	}
 }
 
-double InvMass (double m1, double m2, double p1, double p2, double phi_deg)
+double InvMass (double m1, double m2, double p1x, double p1y, double p1z, double p2x, double p2y, double p2z)
 {
-	double E1 = sqrt(p1*p1 + m1*m1);
-	double E2 = sqrt(p2*p2 + m2*m2);
-	double pi = 3.14159265358979323846;
-	double phi_rad = phi_deg/180*pi;
-	return sqrt( m1*m1 + m2*m2 + 2*(E1*E2 - p1*p2*cos(phi_rad)) ); 
+	double E1 = Energy(m1,p1x,p1y,p1z);
+	double E2 = Energy(m2,p2x,p2y,p2z);
+
+	return sqrt( m1*m1 + m2*m2 + 2*(E1*E2 - p1x*p2x - p1y*p2y - p1z*p2z) );
 }
 
 
@@ -79,9 +78,10 @@ double InvMass (double m1, double m2, double p1, double p2, double phi_deg)
 // Sorting
 //====================================
 
-void Swap(double& a, double& b)
+template <class T>
+void Swap(T& a, T& b)
 {
-	double temp = b;
+	T temp = b;
 	b = a;
 	a = temp;
 }
@@ -99,7 +99,7 @@ void BubbleSort(std::vector<double>& a)
 		for (int i=0; i<size-1; ++i) {
 			if (a[i+1] > a[i]) {
 				swapped = true;
-				Swap(a[i],a[i+1]);
+				Swap<double>(a[i],a[i+1]);
 			}
 		}
 
@@ -107,4 +107,99 @@ void BubbleSort(std::vector<double>& a)
 
 	}
 
+}
+
+void BubbleSortIndex(std::vector<double> a, std::vector<int>& indexvec)
+{
+	std::vector<double> _a = a;
+	int size = _a.size();
+
+	indexvec.clear();
+	for (unsigned int i=0; i<size; ++i) {
+		indexvec.push_back(i);
+	}
+
+	bool swapped;
+
+	if (size < 2) return;
+
+	while(true) {
+		swapped = false;
+
+		for (int i=0; i<size-1; ++i) {
+			if (_a[i+1] > _a[i]) {
+				swapped = true;
+				Swap<double>(_a[i],_a[i+1]);
+				Swap<int>(indexvec[i],indexvec[i+1]);
+			}
+		}
+
+		if (swapped == false) break;
+
+	}
+
+
+
+}
+
+//====================================
+// Number generation
+//====================================
+
+double RandomNumber(double min, double max)
+{
+	double r = (double)rand() / RAND_MAX;
+	return min + r*(max-min);
+}
+
+void GenerateEnergies(int N, double p_min, double p_max, double m_min, double m_max, std::vector<double>& energies)
+{
+	double Nd = N;
+	energies.clear();
+	double px, py, pz;
+	double p;
+	double m;
+	for (int i=0; i<Nd; ++i) {
+		px = RandomNumber(p_min,p_max);
+		py = RandomNumber(p_min,p_max);
+		pz = RandomNumber(p_min,p_max);
+		p = Size3Vec(px,py,pz);
+		m = RandomNumber(m_min,m_max);
+		energies.push_back(sqrt(Square(p)+Square(m)));
+	}
+}
+
+//====================================
+// Other functions
+//====================================
+
+double Square(double a)
+{
+	return a*a;
+}
+
+double Mean(std::vector<double> vars)
+{
+	double mean = 0;
+	for (unsigned int i=0; i<vars.size(); ++i) {
+		mean += vars.at(i);
+	}
+
+	return mean/vars.size();
+}
+
+double StandardDeviation(std::vector<double> vars)
+{
+	double stddev = 0;
+	double mean = Mean(vars);
+	for (unsigned int i=0; i<vars.size(); ++i) {
+		stddev += Square(vars.at(i) - mean);
+	}
+	stddev = stddev/vars.size();
+	
+	return sqrt(stddev);
+}
+
+double Energy(double m, double px, double py, double pz) {
+	return sqrt(px*px + py*py + pz*pz + m*m);
 }

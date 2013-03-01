@@ -1,7 +1,3 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include <set>
 
 #include "pp6calculator.hpp"
 #include "pp6lib/pp6math.hpp"
@@ -34,14 +30,14 @@ int main(int argc, char* argv[])
 	while (true) {
 
 		if (showmenu) {
-			std::cout << "====================================\n";
+			std::cout << "==================================================\n";
 			std::cout << "pp6calculator main menu\n";
-			std::cout << "====================================\n";
+			std::cout << "==================================================\n";
 			std::cout << "1) Week 1\n";
 			std::cout << "2) Week 2\n";
 			std::cout << "3) Week 3\n";
 			std::cout << "q) Quit program\n";
-			std::cout << "------------------------------------\n";
+			std::cout << "--------------------------------------------------\n";
 		}
 
 		showmenu = true;
@@ -87,17 +83,17 @@ void MenuWeek1()
 
 	std::string operation;
 	std::vector<double> vars;
-	int outcode;
+	int outcode; // Code to check for input errors
 
-	std::cout << "====================================\n";
+	std::cout << "==================================================\n";
 	std::cout << "Week 1\n";
-	std::cout << "====================================\n";
+	std::cout << "==================================================\n";
 	std::cout << "a) Addition\n";
 	std::cout << "s) Subtraction\n";
 	std::cout << "m) Multiplication\n";
 	std::cout << "d) Divison\n";
 	std::cout << "q) Quit to main menu\n";
-	std::cout << "------------------------------------\n";
+	std::cout << "--------------------------------------------------\n";
 
 	while (true) {
 
@@ -179,18 +175,18 @@ void MenuWeek2()
 {
 	std::string operation;
 	std::vector<double> vars;
-	int outcode;
+	int outcode; // Code to check for input errors
 
-	std::cout << "====================================\n";
+	std::cout << "==================================================\n";
 	std::cout << "Week 2\n";
-	std::cout << "====================================\n";
+	std::cout << "==================================================\n";
 	std::cout << "i)  Line intercept with x-axis\n";
 	std::cout << "p)  Solve 2nd degree polynomium\n";
 	std::cout << "v3) Size of 3-vector\n";
 	std::cout << "v4) Size of 4-vector\n";
 	std::cout << "im) Invariant mass of particle pair\n";
 	std::cout << "q)  Quit to main menu\n";
-	std::cout << "------------------------------------\n";
+	std::cout << "--------------------------------------------------\n";
 
 	while (true) {
 
@@ -257,10 +253,10 @@ void MenuWeek2()
 		//=====================================
 
 		else if (operation == "im") {
-			std::cout << "Invariant mass of particle pair. Enter as m1,m2,p1,p2,phi:" << std::endl;
-			outcode = get_user_input(5,vars);
+			std::cout << "Invariant mass of particle pair. Enter as m1,m2,p1x,p1y,p1z,p2x,p2y,p2z:" << std::endl;
+			outcode = get_user_input(8,vars);
 			if (outcode != -1) {
-				double result = InvMass(vars.at(0),vars.at(1),vars.at(2),vars.at(3),vars.at(4));
+				double result = InvMass(vars.at(0),vars.at(1),vars.at(2),vars.at(3),vars.at(4),vars.at(5),vars.at(6),vars.at(7));
 				std::cout << "Invariant mass of particles M = " << result << std::endl;
 			}
 		}
@@ -294,14 +290,21 @@ void MenuWeek3()
 
 	std::string operation;
 	std::vector<double> vars;
-	int outcode;
+	int outcode = 0; // Code to check for input errors
 
-	std::cout << "====================================\n";
+	std::cout << "==================================================\n";
 	std::cout << "Week 3\n";
-	std::cout << "====================================\n";
+	std::cout << "==================================================\n";
 	std::cout << "s) Sort numbers in descending order\n";
+	std::cout << "d) Calculate standard deviation of numbers\n";
+	std::cout << "e) Generate 100 energies and 3-momenta and output\n";
+	std::cout << "   the mean energy and its standard deviation\n";
+	std::cout << "m) Read file containing particle data, calculate\n";
+	std::cout << "   invarant masses of all pairs of mu+,mu- and\n";
+	std::cout << "   output the 10 largest values and the muons they\n";
+	std::cout << "   were calculated from\n";
 	std::cout << "q) Quit to main menu\n";
-	std::cout << "------------------------------------\n";
+	std::cout << "--------------------------------------------------\n";
 
 	while (true) {
 
@@ -313,7 +316,7 @@ void MenuWeek3()
 		//=====================================
 
 		if (operation == "s") {
-			std::cout << "Sort array a[N] of numbers in descending order. Input as a0,a1,a2,...:" << std::endl;
+			std::cout << "Sort array of numbers in descending order. Input as a[0],a[1],...:" << std::endl;
 			outcode = get_user_input(-1,vars);
 			if (outcode != -1) {
 				BubbleSort(vars);
@@ -323,6 +326,97 @@ void MenuWeek3()
 				}
 				std::cout << std::endl;
 			}
+		}
+
+		//=====================================
+
+		else if (operation == "d") {
+			std::cout << "Calculate standard deviation of array of numbers. Input as a[0],a[1],...:" << std::endl;
+			outcode = get_user_input(-1,vars);
+			if (outcode != -1) {
+				std::cout << "sigma = " << StandardDeviation(vars) << std::endl;
+			}
+		}
+
+		//=====================================
+
+		else if (operation == "e") {
+			std::cout << "Calculate N energies by generating random 3-momenta and masses. Then output <E> and sigma_E.\n";
+			std::cout << "Input as N,p_min,p_max,m_min,m_max:" << std::endl;
+			outcode = get_user_input(5,vars);
+			if (outcode != -1) {
+				std::vector<double> energies;
+				GenerateEnergies((int)vars.at(0),vars.at(1),vars.at(2),vars.at(3),vars.at(4),energies);
+				std::cout << "Mean: " << Mean(energies) << ", standard deviation: " << StandardDeviation(energies) << std::endl;
+			}
+		}
+
+		//=====================================
+
+		else if (operation == "m") {
+			double mumass = 0.1056583715; // Mass of muon [GeV]
+			std::string file;
+			std::string tempstring; // String for reading in various strings from file
+			std::cout << "Please state the relative location of the data file:" << std::endl;
+			std::cin >> file;
+			FileReader f(file);
+			
+			if (!f.isValid()) {
+				std::cout << "File was not found!" << std::endl;
+				continue;
+			}
+
+			particle temp; // Temporary particle to read in line from file
+			std::vector<particle> muvec_p; // Vector to contain mu+ particles
+			std::vector<particle> muvec_m; // Vector to contain mu- particles
+
+			f.nextLine(); // Skip first line
+			while (f.nextLine()) {
+				tempstring = f.getFieldAsString(6); // Read data source
+				if (tempstring == "run4.dat") {
+					tempstring = f.getFieldAsString(2); // Read particle type
+					if (tempstring == "mu+" || tempstring == "mu-") {
+						temp.mass = mumass;
+						temp.px = f.getFieldAsDouble(3);
+						temp.py = f.getFieldAsDouble(4);
+						temp.pz = f.getFieldAsDouble(5);
+
+						if (tempstring == "mu+") {
+							muvec_p.push_back(temp);
+						}	else {
+							muvec_m.push_back(temp);
+						}
+
+					}
+				}
+			}
+
+			// Now we have all the mu+ and mu- particles in two vectors,
+			// so we can calculate invariant masses of all combinations.
+
+			std::vector<double> invmassvec;
+			std::vector<std::pair<int,int> > eventvec; // Vector of mu+,mu- event pairs
+
+			for (unsigned int i=0; i<muvec_p.size(); ++i) {
+				for (unsigned int j=0; j<muvec_m.size(); ++j) {
+					if (i>=j) {
+						particle mu_p = muvec_p.at(i);
+						particle mu_m = muvec_m.at(j);
+						double im = InvMass(mu_p.mass,mu_m.mass,mu_p.px,mu_p.py,mu_p.pz,mu_m.px,mu_m.py,mu_m.pz);
+						invmassvec.push_back(im);
+						eventvec.push_back(std::pair<int,int>(i,j));
+					}
+				}
+			}
+
+			std::vector<int> indexvec; // Vector to store indexes of the sorted values
+			BubbleSortIndex(invmassvec,indexvec); // Sort the invariant masses in descending order and output index vector
+
+			std::cout << "InvMass  mu+  mu-\n";
+			for (int i=0; i<10; ++i) {
+				printf("%8f %3d %3d\n",invmassvec.at(indexvec.at(i)),eventvec.at(indexvec.at(i)).first,eventvec.at(indexvec.at(i)).second);
+			}
+
 		}
 
 		//=====================================
@@ -371,7 +465,7 @@ int get_user_input(int nvars, std::vector<double>& variables)
 		string_interpret(input,variables);
 	}
 
-	if ( (variabl2es.size() != (unsigned)nvars && nvars != -1) || variables.size() == 0) {
+	if ( (variables.size() != (unsigned)nvars && nvars != -1) || variables.size() == 0) {
 		variables.clear();
 		return -1;
 	}	else {
