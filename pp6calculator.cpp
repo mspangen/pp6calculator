@@ -441,7 +441,7 @@ void MenuWeek3()
 
 		//=====================================
 
-		if (operation == "b") {
+		else if (operation == "b") {
 
 			std::cout << "Boost 4-vector along arbitrary direction. bx,by,bz are boost components. They give the direction, not the size!\n";
 			std::cout << "Input as t,x,y,z,beta,bx,by,bz:" << std::endl;

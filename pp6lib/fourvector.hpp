@@ -7,8 +7,8 @@ class FourVector {
 
 public:
 
-	FourVector();
-	FourVector(double t, double x, double y, double z);
+	FourVector() {m_t = 0; m_x = 0; m_y = 0; m_z = 0;};
+	FourVector(const double t, const double x, const double y, const double z);
 	~FourVector();
 
 	double getT() const;
@@ -21,10 +21,10 @@ public:
 	void setY();
 	void setZ();
 
-	void boost_z(double beta);
-	void boost(double beta, double bx_, double by_, double bz_);
+	void boost_z(const double beta);
+	void boost(const double beta, const double bx_, const double by_, const double bz_);
 	double length() const;
-	void setElements(double t, double x, double y, double z);
+	void setElements(const double t, const double x, const double y, const double z);
 
 private:
 

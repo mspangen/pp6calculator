@@ -1,11 +1,8 @@
 #include "fourvector.hpp"
 
-FourVector::FourVector(double t, double x, double y, double z)
+FourVector::FourVector(const double t, const double x, const double y, const double z)
+: m_t(t), m_x(x), m_y(y), m_z(z)
 {
-	m_t = t;
-	m_x = x;
-	m_y = y;
-	m_z = z;
 }
 
 FourVector::~FourVector()
@@ -32,15 +29,7 @@ double FourVector::getZ() const
 	return m_z;
 }
 
-void FourVector::setElements(double t, double x, double y, double z)
-{
-		m_t = t;
-		m_x = x;
-		m_y = y;
-		m_z = z;
-}
-
-void FourVector::boost_z(double beta)
+void FourVector::boost_z(const double beta)
 {
 	if ( (1-beta*beta) > 0 ) {
 		double gamma = 1/sqrt(1-beta*beta);
@@ -50,7 +39,7 @@ void FourVector::boost_z(double beta)
 	}
 }
 
-void FourVector::boost(double beta, double bx_, double by_, double bz_)
+void FourVector::boost(const double beta, const double bx_, const double by_, const double bz_)
 {
 	if ( (1-beta*beta) > 0 ) {
 
@@ -79,7 +68,13 @@ double FourVector::length() const
 	return sqrt( m_t*m_t - m_x*m_x - m_y*m_y - m_z*m_z );
 }
 
-
+void FourVector::setElements(const double t, const double x, const double y, const double z)
+{
+		m_t = t;
+		m_x = x;
+		m_y = y;
+		m_z = z;
+}
 
 
 
