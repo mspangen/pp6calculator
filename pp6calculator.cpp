@@ -2,6 +2,7 @@
 #include "pp6calculator.hpp"
 #include "pp6lib/pp6math.hpp"
 #include "pp6lib/string_interpret.hpp"
+#include "pp6lib/fourvector.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -92,6 +93,11 @@ void MenuWeek1()
 	std::cout << "s) Subtraction\n";
 	std::cout << "m) Multiplication\n";
 	std::cout << "d) Divison\n";
+	std::cout << "i)  Line intercept with x-axis\n";
+	std::cout << "p)  Solve 2nd degree polynomium\n";
+	std::cout << "v3) Size of 3-vector\n";
+	std::cout << "v4) Size of 4-vector\n";
+	std::cout << "im) Invariant mass of particle pair\n";
 	std::cout << "q) Quit to main menu\n";
 	std::cout << "--------------------------------------------------\n";
 
@@ -149,55 +155,7 @@ void MenuWeek1()
 
 		//=====================================
 
-		else if (operation == "q") {
-			break;
-		}
-
-		else {
-			std::cout << "No such option!" << std::endl;
-		}
-
-		if (outcode == -1) {
-			std::cout << "Error in input!" << std::endl;
-		}
-
-		std::cout << "-----------------" << std::endl;
-
-	}
-
-}
-
-
-//================================================================
-
-
-void MenuWeek2()
-{
-	std::string operation;
-	std::vector<double> vars;
-	int outcode; // Code to check for input errors
-
-	std::cout << "==================================================\n";
-	std::cout << "Week 2\n";
-	std::cout << "==================================================\n";
-	std::cout << "i)  Line intercept with x-axis\n";
-	std::cout << "p)  Solve 2nd degree polynomium\n";
-	std::cout << "v3) Size of 3-vector\n";
-	std::cout << "v4) Size of 4-vector\n";
-	std::cout << "im) Invariant mass of particle pair\n";
-	std::cout << "q)  Quit to main menu\n";
-	std::cout << "--------------------------------------------------\n";
-
-	while (true) {
-
-		vars.clear();
-
-		std::cout << "Choose option: ";
-		std::cin >> operation; // Get operation from user
-
-		//=====================================
-
-		if (operation == "i") {
+		else if (operation == "i") {
 			std::cout << "Intercept of line A*x+B with x-axis. Enter as A,B:" << std::endl;
 			outcode = get_user_input(2,vars);
 			if (outcode != -1) {
@@ -285,15 +243,14 @@ void MenuWeek2()
 //================================================================
 
 
-void MenuWeek3()
+void MenuWeek2()
 {
-
 	std::string operation;
 	std::vector<double> vars;
-	int outcode = 0; // Code to check for input errors
+	int outcode; // Code to check for input errors
 
 	std::cout << "==================================================\n";
-	std::cout << "Week 3\n";
+	std::cout << "Week 2\n";
 	std::cout << "==================================================\n";
 	std::cout << "s) Sort numbers in descending order\n";
 	std::cout << "d) Calculate standard deviation of numbers\n";
@@ -303,7 +260,7 @@ void MenuWeek3()
 	std::cout << "   invarant masses of all pairs of mu+,mu- from\n";
 	std::cout << "   run4.dat and output the 10 largest values and\n";
 	std::cout << "   the muons they were calculated from\n";
-	std::cout << "q) Quit to main menu\n";
+	std::cout << "q)  Quit to main menu\n";
 	std::cout << "--------------------------------------------------\n";
 
 	while (true) {
@@ -415,6 +372,111 @@ void MenuWeek3()
 			std::cout << "InvMass  mu+  mu-\n";
 			for (int i=0; i<10; ++i) {
 				printf("%8f %3d %3d\n",invmassvec.at(indexvec.at(i)),eventvec.at(indexvec.at(i)).first,eventvec.at(indexvec.at(i)).second);
+			}
+
+		}
+
+		//=====================================
+
+		else if (operation == "q") {
+			break;
+		}
+
+		else {
+			std::cout << "No such option!" << std::endl;
+		}
+
+		if (outcode == -1) {
+			std::cout << "Error in input!" << std::endl;
+		}
+
+		std::cout << "-----------------" << std::endl;
+
+	}
+
+}
+
+
+//================================================================
+
+
+void MenuWeek3()
+{
+
+	std::string operation;
+	std::vector<double> vars;
+	int outcode = 0; // Code to check for input errors
+
+	std::cout << "==================================================\n";
+	std::cout << "Week 3\n";
+	std::cout << "==================================================\n";
+	std::cout << "bz) Boost 4-vector along z-axis\n";
+	std::cout << "b)  Boost 4-vector along arbitrary direction\n";
+	std::cout << "l)  Calculate length of 4-vector\n";
+	std::cout << "q)  Quit to main menu\n";
+	std::cout << "--------------------------------------------------\n";
+
+	while (true) {
+
+		vars.clear();
+
+		std::cout << "Choose option: ";
+		std::cin >> operation; // Get operation from user
+
+		//=====================================
+
+		if (operation == "bz") {
+
+			std::cout << "Boost 4-vector along z-axis. Input as t,x,y,z,beta:" << std::endl;
+			outcode = get_user_input(5,vars);
+			if (outcode != -1) {
+				FourVector *vec = createFourVector();
+				setFourVectorElements(vec,vars.at(0),vars.at(1),vars.at(2),vars.at(3));
+				int boostOK = boostZFourVector(vec,vars.at(4));
+				if (boostOK == 0) {
+					std::cout << "Boosted 4-vector: (" << getFourVectorT(vec) << "," << getFourVectorX(vec) << "," << getFourVectorY(vec) << "," << getFourVectorZ(vec) << ")" << std::endl;
+				} else {
+					std::cout << "Invalid arguments!" << std::endl;
+				}
+
+				destroyFourVector(vec);
+			}
+
+		}
+
+		//=====================================
+
+		if (operation == "b") {
+
+			std::cout << "Boost 4-vector along arbitrary direction. bx,by,bz are boost components. They give the direction, not the size!\n";
+			std::cout << "Input as t,x,y,z,beta,bx,by,bz:" << std::endl;
+			outcode = get_user_input(8,vars);
+			if (outcode != -1) {
+				FourVector *vec = createFourVector();
+				setFourVectorElements(vec,vars.at(0),vars.at(1),vars.at(2),vars.at(3));
+				int boostOK = boostFourVector(vec,vars.at(4),vars.at(5),vars.at(6),vars.at(7));
+				if (boostOK == 0) {
+					std::cout << "Boosted 4-vector: (" << getFourVectorT(vec) << "," << getFourVectorX(vec) << "," << getFourVectorY(vec) << "," << getFourVectorZ(vec) << ")" << std::endl;
+				} else {
+					std::cout << "Invalid arguments!" << std::endl;
+				}
+
+				destroyFourVector(vec);
+			}
+
+		}
+
+		//=====================================
+
+		else if (operation == "l") {
+			
+			std::cout << "Calculate length of 4-vector. Input as t,x,y,z:" << std::endl;
+			outcode = get_user_input(4,vars);
+			if (outcode != -1) {
+				FourVector *vec = createFourVector();
+				setFourVectorElements(vec,vars.at(0),vars.at(1),vars.at(2),vars.at(3));
+				std::cout << "Length = " << lengthOfFourVector(vec) << std::endl;
+				destroyFourVector(vec);
 			}
 
 		}
