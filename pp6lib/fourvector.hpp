@@ -2,6 +2,7 @@
 #define __FOURVECTOR_HPP__
 
 #include <cmath>
+#include <iostream>
 
 class FourVector {
 
@@ -26,6 +27,12 @@ public:
 	double length() const;
 	void setElements(const double t, const double x, const double y, const double z);
 
+	// Operators
+
+	FourVector& operator+=(const FourVector& rhs);
+	FourVector& operator-=(const FourVector& rhs);
+
+
 private:
 
 	double m_t;
@@ -37,6 +44,15 @@ private:
 
 };
 
+	// Operators outside class!
+
+FourVector operator+(const FourVector& lhs, const FourVector& rhs);
+
+std::ostream& operator<<(std::ostream& stream, const FourVector& v);
+
 
 
 #endif //__FOURVECTOR_HPP__
+
+
+

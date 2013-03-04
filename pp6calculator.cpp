@@ -20,6 +20,27 @@ int main(int argc, char* argv[])
 	}
 
 
+
+	// Testing Fourvector operators
+/*
+	FourVector vec1(10,5,4,3);
+	FourVector vec2(20,1,2,3);
+	FourVector vec3(50,5,5,5);
+	
+	vec1 += vec3;
+	vec2 -= vec3;
+
+	FourVector vec4 = vec1 + vec2;
+
+	std::cout << "vec1 = " << vec1 << std::endl;
+	std::cout << "vec2 = " << vec2 << std::endl;
+	std::cout << "vec4 = " << vec4 << std::endl;
+*/
+
+
+
+
+
 	// Display main menu
 	// This gives access to the submenus for each week of the course.
 	// It is placed in a while loop such that the program returns to
