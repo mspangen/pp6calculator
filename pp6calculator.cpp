@@ -429,17 +429,12 @@ void MenuWeek3()
 
 			std::cout << "Boost 4-vector along z-axis. Input as t,x,y,z,beta:" << std::endl;
 			outcode = get_user_input(5,vars);
-			if (outcode != -1) {
-				FourVector *vec = createFourVector();
-				setFourVectorElements(vec,vars.at(0),vars.at(1),vars.at(2),vars.at(3));
-				int boostOK = boostZFourVector(vec,vars.at(4));
-				if (boostOK == 0) {
-					std::cout << "Boosted 4-vector: (" << getFourVectorT(vec) << "," << getFourVectorX(vec) << "," << getFourVectorY(vec) << "," << getFourVectorZ(vec) << ")" << std::endl;
-				} else {
+			if (outcode != -1 && (1-vars.at(4)*vars.at(4)) > 0) {
+				FourVector vec(vars.at(0),vars.at(1),vars.at(2),vars.at(3));
+				vec.boost_z(vars.at(4));
+				std::cout << "Boosted 4-vector: (" << vec.getT() << "," << vec.getX() << "," << vec.getY() << "," << vec.getZ() << ")" << std::endl;
+			} else {
 					std::cout << "Invalid arguments!" << std::endl;
-				}
-
-				destroyFourVector(vec);
 			}
 
 		}
@@ -451,17 +446,12 @@ void MenuWeek3()
 			std::cout << "Boost 4-vector along arbitrary direction. bx,by,bz are boost components. They give the direction, not the size!\n";
 			std::cout << "Input as t,x,y,z,beta,bx,by,bz:" << std::endl;
 			outcode = get_user_input(8,vars);
-			if (outcode != -1) {
-				FourVector *vec = createFourVector();
-				setFourVectorElements(vec,vars.at(0),vars.at(1),vars.at(2),vars.at(3));
-				int boostOK = boostFourVector(vec,vars.at(4),vars.at(5),vars.at(6),vars.at(7));
-				if (boostOK == 0) {
-					std::cout << "Boosted 4-vector: (" << getFourVectorT(vec) << "," << getFourVectorX(vec) << "," << getFourVectorY(vec) << "," << getFourVectorZ(vec) << ")" << std::endl;
-				} else {
-					std::cout << "Invalid arguments!" << std::endl;
-				}
-
-				destroyFourVector(vec);
+			if (outcode != -1 && (1-vars.at(4)*vars.at(4)) > 0) {
+				FourVector vec(vars.at(0),vars.at(1),vars.at(2),vars.at(3));
+				vec.boost(vars.at(4),vars.at(5),vars.at(6),vars.at(7));
+				std::cout << "Boosted 4-vector: (" << vec.getT() << "," << vec.getX() << "," << vec.getY() << "," << vec.getZ() << ")" << std::endl;
+			} else {
+				std::cout << "Invalid arguments!" << std::endl;
 			}
 
 		}
@@ -473,10 +463,8 @@ void MenuWeek3()
 			std::cout << "Calculate length of 4-vector. Input as t,x,y,z:" << std::endl;
 			outcode = get_user_input(4,vars);
 			if (outcode != -1) {
-				FourVector *vec = createFourVector();
-				setFourVectorElements(vec,vars.at(0),vars.at(1),vars.at(2),vars.at(3));
-				std::cout << "Length = " << lengthOfFourVector(vec) << std::endl;
-				destroyFourVector(vec);
+				FourVector vec(vars.at(0),vars.at(1),vars.at(2),vars.at(3));
+				std::cout << "Length = " << vec.length() << std::endl;
 			}
 
 		}

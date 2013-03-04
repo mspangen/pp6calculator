@@ -1,91 +1,82 @@
 #include "fourvector.hpp"
 
-struct FourVector {
-	double t;
-	double x;
-	double y;
-	double z;
-};
-
-FourVector* createFourVector()
+FourVector::FourVector(double t, double x, double y, double z)
 {
-	return new FourVector;
+	m_t = t;
+	m_x = x;
+	m_y = y;
+	m_z = z;
 }
 
-void destroyFourVector(FourVector *&v)
+FourVector::~FourVector()
 {
-	if(v) {
-		delete v;
-		v = 0;
-	}
 }
 
-double getFourVectorT(FourVector *v)
+double FourVector::getT() const
 {
-	return v->t;
+	return m_t;
 }
 
-double getFourVectorX(FourVector *v)
+double FourVector::getX() const
 {
-	return v->x;
+	return m_x;
 }
 
-double getFourVectorY(FourVector *v)
+double FourVector::getY() const
 {
-	return v->y;
+	return m_y;
 }
 
-double getFourVectorZ(FourVector *v)
+double FourVector::getZ() const
 {
-	return v->z;
+	return m_z;
 }
 
-void setFourVectorElements(FourVector *v, double t, double x, double y, double z)
+void FourVector::setElements(double t, double x, double y, double z)
 {
-	if (v) {
-		v->t = t;
-		v->x = x;
-		v->y = y;
-		v->z = z;
-	}
+		m_t = t;
+		m_x = x;
+		m_y = y;
+		m_z = z;
 }
 
-int boostZFourVector(FourVector *v, double beta)
+void FourVector::boost_z(double beta)
 {
-	if (v && (1-beta*beta) > 0) {
+	if ( (1-beta*beta) > 0 ) {
 		double gamma = 1/sqrt(1-beta*beta);
-		v->t = gamma*( (v->t) - beta*(v->z) );
-		v->z = gamma*( (v->z) - beta*(v->t) );
-		return 0;
-	} else {
-		return -1;
+		double t_0 = m_t;
+		m_t = gamma*( (m_t) - beta*(m_z) );
+		m_z = gamma*( (m_z) - beta*(t_0) );
 	}
 }
 
-int boostFourVector(FourVector *v, double beta, double _bx, double _by, double _bz)
+void FourVector::boost(double beta, double bx_, double by_, double bz_)
 {
-	if (v && (1-beta*beta) > 0) {
+	if ( (1-beta*beta) > 0 ) {
+
+		double t_0 = m_t;
+		double x_0 = m_x;
+		double y_0 = m_y;
+		double z_0 = m_z;
+
 		double gamma = 1/sqrt(1-beta*beta);
-		double length = sqrt(_bx*_bx+_by*_by+_bz*_bz);
+		double length = sqrt(bx_*bx_+by_*by_+bz_*bz_);
 
-		double bx = _bx/length*beta;
-		double by = _by/length*beta;
-		double bz = _bz/length*beta;
+		double bx = bx_/length*beta;
+		double by = by_/length*beta;
+		double bz = bz_/length*beta;
 
-		v->t = gamma*( (v->t) - bx*(v->x) - by*(v->y) - bz*(v->z) );
-		v->x = -gamma*bx*(v->t) + (1+(gamma-1)*bx*bx/(beta*beta))*(v->x) + (gamma-1)*bx*by/(beta*beta)*(v->y) + (gamma-1)*bx*bz/(beta*beta)*(v->z);
-		v->y = -gamma*by*(v->t) + (gamma-1)*by*bx/(beta*beta)*(v->x) + (1+(gamma-1)*by*by/(beta*beta))*(v->y) + (gamma-1)*by*bz/(beta*beta)*(v->z);
-		v->z = -gamma*bz*(v->t) + (gamma-1)*bz*bx/(beta*beta)*(v->x) + (gamma-1)*bz*by/(beta*beta)*(v->y) + (1+(gamma-1)*bz*bz/(beta*beta))*(v->z);
-		return 0;
+		m_t = gamma*( t_0 - bx*x_0 - by*y_0 - bz*z_0 );
+		m_x = -gamma*bx*t_0 + (1+(gamma-1)*bx*bx/(beta*beta))*x_0 + (gamma-1)*bx*by/(beta*beta)*y_0 + (gamma-1)*bx*bz/(beta*beta)*z_0;
+		m_y = -gamma*by*t_0 + (gamma-1)*by*bx/(beta*beta)*x_0 + (1+(gamma-1)*by*by/(beta*beta))*y_0 + (gamma-1)*by*bz/(beta*beta)*z_0;
+		m_z = -gamma*bz*t_0 + (gamma-1)*bz*bx/(beta*beta)*x_0 + (gamma-1)*bz*by/(beta*beta)*y_0 + (1+(gamma-1)*bz*bz/(beta*beta))*z_0;
 
-	} else {
-		return -1;
 	}
 }
 
-double lengthOfFourVector(FourVector *v)
+double FourVector::length() const
 {
-	return sqrt( (v->t)*(v->t) - (v->x)*(v->x) - (v->y)*(v->y) - (v->z)*(v->z) );
+	return sqrt( m_t*m_t - m_x*m_x - m_y*m_y - m_z*m_z );
 }
 
 
