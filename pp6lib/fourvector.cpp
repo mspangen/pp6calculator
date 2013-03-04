@@ -127,6 +127,17 @@ FourVector& FourVector::operator-=(const FourVector& rhs)
 	return *this;
 }
 
+FourVector& operator=(const MyClass& rhs)
+{
+	if (&rhs != this) {
+		m_t = rhs.m_t;
+		m_x = rhs.m_x;
+		m_y = rhs.m_y;
+		m_z = rhs.m_z;
+	} 
+	return *this;
+}
+
 // Outside class. Should not be in class scope!
 
 FourVector operator+(const FourVector& lhs, const FourVector& rhs)
@@ -136,15 +147,28 @@ FourVector operator+(const FourVector& lhs, const FourVector& rhs)
 	return temp;
 }
 
+FourVector operator-(const FourVector& lhs, const FourVector& rhs)
+{
+	FourVector temp(lhs);
+	temp -= rhs;
+	return temp;
+}
+
 std::ostream& operator<<(std::ostream& stream, const FourVector& v)
-	{
-		stream << "[";
-		stream << v.getT() << ", " << v.getX() << ", ";
-		stream << v.getY() << ", " << v.getZ() << "]";
-		return stream;
-	}
+{
+	stream << "[";
+	stream << v.getT() << ", " << v.getX() << ", ";
+	stream << v.getY() << ", " << v.getZ() << "]";
+	return stream;
+}
 
-
+std::istream& operator>>(std::istream& stream, FourVector& v)
+{
+	double t, x, y, z;
+	stream >> t >> x >> y >> z;
+	v.setT(t); v.setX(x); v.setY(y); v.setZ(z);
+	return stream;
+}
 
 
 

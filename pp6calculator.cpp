@@ -31,10 +31,12 @@ int main(int argc, char* argv[])
 	vec2 -= vec3;
 
 	FourVector vec4 = vec1 + vec2;
+	FourVector vec5 = vec1 - vec2;
 
 	std::cout << "vec1 = " << vec1 << std::endl;
 	std::cout << "vec2 = " << vec2 << std::endl;
 	std::cout << "vec4 = " << vec4 << std::endl;
+	std::cout << "vec5 = " << vec5 << std::endl;
 */
 
 

@@ -31,7 +31,7 @@ public:
 
 	FourVector& operator+=(const FourVector& rhs);
 	FourVector& operator-=(const FourVector& rhs);
-
+	FourVector& operator=(const MyClass& rhs)
 
 private:
 
@@ -47,6 +47,7 @@ private:
 	// Operators outside class!
 
 FourVector operator+(const FourVector& lhs, const FourVector& rhs);
+FourVector operator-(const FourVector& lhs, const FourVector& rhs);
 
 std::ostream& operator<<(std::ostream& stream, const FourVector& v);
 
