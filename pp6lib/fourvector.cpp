@@ -3,6 +3,7 @@
 FourVector::FourVector(const double t, const double x, const double y, const double z)
 : m_t(t), m_x(x), m_y(y), m_z(z)
 {
+	calcLength();
 }
 
 FourVector::~FourVector()
@@ -29,13 +30,37 @@ double FourVector::getZ() const
 	return m_z;
 }
 
+void FourVector::setT(double t)
+{
+	m_t = t;
+	calcLength();
+}
+
+void FourVector::setX(double x)
+{
+	m_x = x;
+	calcLength();
+}
+
+void FourVector::setY(double y)
+{
+	m_y = y;
+	calcLength();
+}
+
+void FourVector::setZ(double z)
+{
+	m_z = z;
+	calcLength();
+}
+
 void FourVector::boost_z(const double beta)
 {
 	if ( (1-beta*beta) > 0 ) {
 		double gamma = 1/sqrt(1-beta*beta);
 		double t_0 = m_t;
-		m_t = gamma*( (m_t) - beta*(m_z) );
-		m_z = gamma*( (m_z) - beta*(t_0) );
+		m_t = gamma*( m_t - beta*m_z );
+		m_z = gamma*( m_z - beta*t_0 );
 	}
 }
 
@@ -65,7 +90,7 @@ void FourVector::boost(const double beta, const double bx_, const double by_, co
 
 double FourVector::length() const
 {
-	return sqrt( m_t*m_t - m_x*m_x - m_y*m_y - m_z*m_z );
+	return m_length;
 }
 
 void FourVector::setElements(const double t, const double x, const double y, const double z)
@@ -76,7 +101,10 @@ void FourVector::setElements(const double t, const double x, const double y, con
 		m_z = z;
 }
 
-
+void FourVector::calcLength()
+{
+	m_length = sqrt( m_t*m_t - m_x*m_x - m_y*m_y - m_z*m_z );
+}
 
 
 
