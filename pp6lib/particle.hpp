@@ -1,7 +1,6 @@
 #ifndef __PARTICLE_H__
 #define __PARTICLE_H__
 
-//#include "threevector.hpp"
 #include "fourvector.hpp"
 
 class Particle {
@@ -9,44 +8,25 @@ class Particle {
 public:
 
 	Particle ();
-	Particle (const double invmass, const double px, const double py, const double pz);
-	Particle (const double energy, const double px, const double py, const double pz);
+	Particle (const double mass, const double px, const double py, const double pz);
 	~Particle ();
 
-
-	double getInvMass () const;
+	double getMass () const;
 	double getEnergy () const;
 	double getPx () const;
 	double getPy () const;
 	double getPz () const;
 
-
+	void boost(const double beta, const double b1, const double b2, const double b3);
 
 private:
 
-	FourVector _mp_vec; //Need somehow to redefine member variables to contain mass, momentum and energy
-	const std::string type;
-	
-	double _invmass;
-	double _energy;
-	double _px, _py, _pz;
+	FourVector m_pvec; // 4-momentum vector
+	double m_mass;
+	const std::string m_type;
 
-	void calcInvMass ();
 	void calcEnergy ();
 
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
+};
 
 #endif

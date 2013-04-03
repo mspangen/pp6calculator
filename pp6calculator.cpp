@@ -3,6 +3,7 @@
 #include "pp6lib/pp6math.hpp"
 #include "pp6lib/string_interpret.hpp"
 #include "pp6lib/fourvector.hpp"
+#include "pp6lib/particle.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -18,29 +19,6 @@ int main(int argc, char* argv[])
 			}
 		}
 	}
-
-
-
-	// Testing Fourvector operators
-/*
-	FourVector vec1(10,5,4,3);
-	FourVector vec2(20,1,2,3);
-	FourVector vec3(50,5,5,5);
-	
-	vec1 += vec3;
-	vec2 -= vec3;
-
-	FourVector vec4 = vec1 + vec2;
-	FourVector vec5 = vec1 - vec2;
-
-	std::cout << "vec1 = " << vec1 << std::endl;
-	std::cout << "vec2 = " << vec2 << std::endl;
-	std::cout << "vec4 = " << vec4 << std::endl;
-	std::cout << "vec5 = " << vec5 << std::endl;
-*/
-
-
-
 
 
 	// Display main menu
@@ -60,6 +38,7 @@ int main(int argc, char* argv[])
 			std::cout << "1) Week 1\n";
 			std::cout << "2) Week 2\n";
 			std::cout << "3) Week 3\n";
+			std::cout << "4) Week 4\n";
 			std::cout << "q) Quit program\n";
 			std::cout << "--------------------------------------------------\n";
 		}
@@ -79,6 +58,10 @@ int main(int argc, char* argv[])
 
 		else if (operation == "3") {
 			MenuWeek3();
+		}
+
+		else if (operation == "4") {
+			MenuWeek4();
 		}
 
 		else if (operation == "q") {
@@ -346,9 +329,8 @@ void MenuWeek2()
 				continue;
 			}
 
-			particle temp; // Temporary particle to read in line from file
-			std::vector<particle> muvec_p; // Vector to contain mu+ particles
-			std::vector<particle> muvec_m; // Vector to contain mu- particles
+			std::vector<Particle> muvec_p; // Vector to contain mu+ particles
+			std::vector<Particle> muvec_m; // Vector to contain mu- particles
 
 			f.nextLine(); // Skip first line
 			while (f.nextLine()) {
@@ -356,10 +338,7 @@ void MenuWeek2()
 				if (tempstring == "run4.dat") {
 					tempstring = f.getFieldAsString(2); // Read particle type
 					if (tempstring == "mu+" || tempstring == "mu-") {
-						temp.mass = mumass;
-						temp.px = f.getFieldAsDouble(3);
-						temp.py = f.getFieldAsDouble(4);
-						temp.pz = f.getFieldAsDouble(5);
+						Particle temp(mumass,f.getFieldAsDouble(3),f.getFieldAsDouble(4),f.getFieldAsDouble(5));
 
 						if (tempstring == "mu+") {
 							muvec_p.push_back(temp);
@@ -380,9 +359,9 @@ void MenuWeek2()
 			for (unsigned int i=0; i<muvec_p.size(); ++i) {
 				for (unsigned int j=0; j<muvec_m.size(); ++j) {
 					if (i>=j) {
-						particle mu_p = muvec_p.at(i);
-						particle mu_m = muvec_m.at(j);
-						double im = InvMass(mu_p.mass,mu_m.mass,mu_p.px,mu_p.py,mu_p.pz,mu_m.px,mu_m.py,mu_m.pz);
+						Particle mu_p = muvec_p.at(i);
+						Particle mu_m = muvec_m.at(j);
+						double im = InvMass(mu_p.getMass(),mu_m.getMass(),mu_p.getPx(),mu_p.getPy(),mu_p.getPz(),mu_m.getPx(),mu_m.getPy(),mu_m.getPz());
 						invmassvec.push_back(im);
 						eventvec.push_back(std::pair<int,int>(i,j));
 					}
@@ -398,6 +377,8 @@ void MenuWeek2()
 			}
 
 		}
+
+
 
 		//=====================================
 
@@ -454,8 +435,8 @@ void MenuWeek3()
 			outcode = get_user_input(5,vars);
 			if (outcode != -1 && (1-vars.at(4)*vars.at(4)) > 0) {
 				FourVector vec(vars.at(0),vars.at(1),vars.at(2),vars.at(3));
-				vec.boost_z(vars.at(4));
-				std::cout << "Boosted 4-vector: (" << vec.getT() << "," << vec.getX() << "," << vec.getY() << "," << vec.getZ() << ")" << std::endl;
+				vec.boost_v3(vars.at(4));
+				std::cout << "Boosted 4-vector: (" << vec.getv0() << "," << vec.getv1() << "," << vec.getv2() << "," << vec.getv3() << ")" << std::endl;
 			} else {
 					std::cout << "Invalid arguments!" << std::endl;
 			}
@@ -472,7 +453,7 @@ void MenuWeek3()
 			if (outcode != -1 && (1-vars.at(4)*vars.at(4)) > 0) {
 				FourVector vec(vars.at(0),vars.at(1),vars.at(2),vars.at(3));
 				vec.boost(vars.at(4),vars.at(5),vars.at(6),vars.at(7));
-				std::cout << "Boosted 4-vector: (" << vec.getT() << "," << vec.getX() << "," << vec.getY() << "," << vec.getZ() << ")" << std::endl;
+				std::cout << "Boosted 4-vector: (" << vec.getv0() << "," << vec.getv1() << "," << vec.getv2() << "," << vec.getv3() << ")" << std::endl;
 			} else {
 				std::cout << "Invalid arguments!" << std::endl;
 			}
@@ -512,6 +493,72 @@ void MenuWeek3()
 
 }
 
+
+//================================================================
+
+
+void MenuWeek4()
+{
+
+	std::string operation;
+	std::vector<double> vars;
+	int outcode = 0; // Code to check for input errors
+
+	std::cout << "==================================================\n";
+	std::cout << "Week 4\n";
+	std::cout << "==================================================\n";
+	std::cout << "r) Read in data from PDG database\n";
+	std::cout << "q)  Quit to main menu\n";
+	std::cout << "--------------------------------------------------\n";
+
+	while (true) {
+
+		vars.clear();
+
+		std::cout << "Choose option: ";
+		std::cin >> operation; // Get operation from user
+
+		//=====================================
+
+		if (operation == "bz") {
+
+			std::cout << "Read in data rom PDG database. " << std::endl;
+			std::cout << "Please state the relative location of the data file:" << std::endl;
+			std::string file;
+			std::cin >> file;
+			FileReader f(file);
+			
+			if (!f.isValid()) {
+				std::cout << "File was not found!" << std::endl;
+				continue;
+			}
+
+			f.nextLine(); // Skip first line
+			while (f.nextLine()) {
+				std::cout << f.getField<std::string>(1) << ", " << f.getField<int>(2) << ", " << f.getField<int>(3) << ", " << f.getField<double>(4) << std::endl;
+			}
+
+		}
+
+		//===================================
+
+		else if (operation == "q") {
+			break;
+		}
+
+		else {
+			std::cout << "No such option!" << std::endl;
+		}
+
+		if (outcode == -1) {
+			std::cout << "Error in input!" << std::endl;
+		}
+
+		std::cout << "-----------------" << std::endl;
+
+	}
+
+}
 
 //=====================================
 // Other functions

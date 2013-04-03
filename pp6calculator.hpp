@@ -13,6 +13,7 @@ int get_user_input(int nvars, std::vector<double>& variables);
 void MenuWeek1();
 void MenuWeek2();
 void MenuWeek3();
+void MenuWeek4();
 
 void helptext();
 

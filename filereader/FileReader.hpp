@@ -16,6 +16,9 @@ class FileReader {
   double getFieldAsDouble(const int n);
   std::string getFieldAsString(const int n);
 
+	template <typename T>
+	T getField(const int n);
+
   bool inputFailed() const;
   bool isValid() const;
 

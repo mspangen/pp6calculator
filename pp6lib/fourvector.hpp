@@ -3,44 +3,45 @@
 
 #include <cmath>
 #include <iostream>
+#include "threevector.hpp"
+#include "pp6math.hpp"
 
 class FourVector {
 
 public:
 
-	FourVector() {m_t = 0; m_x = 0; m_y = 0; m_z = 0;};
-	FourVector(const double t, const double x, const double y, const double z);
+	FourVector() {m_v0 = 0; vec3.setv1(0); vec3.setv2(0); vec3.setv3(0);};
+	FourVector(const double v0, const double v1, const double v2, const double v3);
 	~FourVector();
 
-	double getT() const;
-	double getX() const;
-	double getY() const;
-	double getZ() const;
+	double getv0() const;
+	double getv1() const;
+	double getv2() const;
+	double getv3() const;
 
-	void setT(double t);
-	void setX(double x);
-	void setY(double y);
-	void setZ(double z);
+	void setv0(double v0);
+	void setv1(double v1);
+	void setv2(double v2);
+	void setv3(double v3);
 
-	void boost_z(const double beta);
-	void boost(const double beta, const double bx_, const double by_, const double bz_);
+	void boost_v3(const double beta);
+	void boost(const double beta, const double b1_, const double b2_, const double b3_);
 	double length() const;
-	void setElements(const double t, const double x, const double y, const double z);
+	void setElements(const double v0, const double v1, const double v2, const double v3);
 
 	// Operators
 
 	FourVector& operator+=(const FourVector& rhs);
 	FourVector& operator-=(const FourVector& rhs);
-	FourVector& operator=(const MyClass& rhs)
+	FourVector& operator=(const FourVector& rhs);
 
 private:
 
-	double m_t;
-	double m_x, m_y, m_z;
+	ThreeVector vec3;
+	double m_v0;
 	double m_length;
 
 	void calcLength();
-
 
 };
 

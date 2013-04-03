@@ -1,8 +1,11 @@
 #include "fourvector.hpp"
 
-FourVector::FourVector(const double t, const double x, const double y, const double z)
-: m_t(t), m_x(x), m_y(y), m_z(z)
+FourVector::FourVector(const double v0, const double v1, const double v2, const double v3)
+: m_v0(v0)
 {
+	vec3.setv1(v1);
+	vec3.setv2(v2);
+	vec3.setv3(v3);
 	calcLength();
 }
 
@@ -10,80 +13,80 @@ FourVector::~FourVector()
 {
 }
 
-double FourVector::getT() const
+double FourVector::getv0() const
 {
-	return m_t;
+	return m_v0;
 }
 
-double FourVector::getX() const
+double FourVector::getv1() const
 {
-	return m_x;
+	return vec3.getv1();
 }
 
-double FourVector::getY() const
+double FourVector::getv2() const
 {
-	return m_y;
+	return vec3.getv2();
 }
 
-double FourVector::getZ() const
+double FourVector::getv3() const
 {
-	return m_z;
+	return vec3.getv3();
 }
 
-void FourVector::setT(double t)
+void FourVector::setv0(double v0)
 {
-	m_t = t;
+	m_v0 = v0;
 	calcLength();
 }
 
-void FourVector::setX(double x)
+void FourVector::setv1(double v1)
 {
-	m_x = x;
+	vec3.setv1(v1);
 	calcLength();
 }
 
-void FourVector::setY(double y)
+void FourVector::setv2(double v2)
 {
-	m_y = y;
+	vec3.setv2(v2);
 	calcLength();
 }
 
-void FourVector::setZ(double z)
+void FourVector::setv3(double v3)
 {
-	m_z = z;
+	vec3.setv3(v3);
 	calcLength();
 }
 
-void FourVector::boost_z(const double beta)
+void FourVector::boost_v3(const double beta)
 {
 	if ( (1-beta*beta) > 0 ) {
 		double gamma = 1/sqrt(1-beta*beta);
-		double t_0 = m_t;
-		m_t = gamma*( m_t - beta*m_z );
-		m_z = gamma*( m_z - beta*t_0 );
+		double v0 = m_v0;
+		m_v0 = gamma*( m_v0 - beta*vec3.getv3() );
+		vec3.setv3( gamma*( vec3.getv3() - beta*v0 ) );
 	}
 }
 
-void FourVector::boost(const double beta, const double bx_, const double by_, const double bz_)
+void FourVector::boost(const double beta, const double b1_, const double b2_, const double b3_)
 {
 	if ( (1-beta*beta) > 0 ) {
 
-		double t_0 = m_t;
-		double x_0 = m_x;
-		double y_0 = m_y;
-		double z_0 = m_z;
+		double v0 = m_v0;
+		double v1 = vec3.getv1();
+		double v2 = vec3.getv2();
+		double v3 = vec3.getv3();
 
 		double gamma = 1/sqrt(1-beta*beta);
-		double length = sqrt(bx_*bx_+by_*by_+bz_*bz_);
+		double length = sqrt(b1_*b1_+b2_*b2_+b3_*b3_);
 
-		double bx = bx_/length*beta;
-		double by = by_/length*beta;
-		double bz = bz_/length*beta;
+		double b1 = b1_/length*beta;
+		double b2 = b2_/length*beta;
+		double b3 = b3_/length*beta;
 
-		m_t = gamma*( t_0 - bx*x_0 - by*y_0 - bz*z_0 );
-		m_x = -gamma*bx*t_0 + (1+(gamma-1)*bx*bx/(beta*beta))*x_0 + (gamma-1)*bx*by/(beta*beta)*y_0 + (gamma-1)*bx*bz/(beta*beta)*z_0;
-		m_y = -gamma*by*t_0 + (gamma-1)*by*bx/(beta*beta)*x_0 + (1+(gamma-1)*by*by/(beta*beta))*y_0 + (gamma-1)*by*bz/(beta*beta)*z_0;
-		m_z = -gamma*bz*t_0 + (gamma-1)*bz*bx/(beta*beta)*x_0 + (gamma-1)*bz*by/(beta*beta)*y_0 + (1+(gamma-1)*bz*bz/(beta*beta))*z_0;
+		m_v0 = gamma*( v0 - b1*v1 - b2*v2 - b3*v3 );
+		vec3.setv1( -gamma*b1*v0 + (1+(gamma-1)*b1*b1/(beta*beta))*v1 + (gamma-1)*b1*b2/(beta*beta)*v2 + (gamma-1)*b1*b3/(beta*beta)*v3 );
+		vec3.setv2( -gamma*b2*v0 + (gamma-1)*b2*b3/(beta*beta)*v1 + (1+(gamma-1)*b2*b2/(beta*beta))*v2 + (gamma-1)*b2*b3/(beta*beta)*v3 );
+		vec3.setv3( -gamma*b3*v0 + (gamma-1)*b3*b1/(beta*beta)*v1 + (gamma-1)*b3*b2/(beta*beta)*v2 + (1+(gamma-1)*b3*b3/(beta*beta))*v3 );
 
 	}
 }
@@ -93,17 +96,17 @@ double FourVector::length() const
 	return m_length;
 }
 
-void FourVector::setElements(const double t, const double x, const double y, const double z)
+void FourVector::setElements(const double v0, const double v1, const double v2, const double v3)
 {
-		m_t = t;
-		m_x = x;
-		m_y = y;
-		m_z = z;
+		m_v0 = v0;
+		vec3.setv1(v1);
+		vec3.setv2(v2);
+		vec3.setv3(v3);
 }
 
 void FourVector::calcLength()
 {
-	m_length = sqrt( m_t*m_t - m_x*m_x - m_y*m_y - m_z*m_z );
+	m_length = sqrt( Square(m_v0) - Square(vec3.getv1()) - Square(vec3.getv2()) - Square(vec3.getv3()) );
 }
 
 
@@ -111,29 +114,29 @@ void FourVector::calcLength()
 
 FourVector& FourVector::operator+=(const FourVector& rhs)
 {
-	m_t += rhs.m_t;
-	m_x += rhs.m_x;
-	m_y += rhs.m_y;
-	m_z += rhs.m_z;
+	m_v0 += rhs.m_v0;
+	vec3.setv1(vec3.getv1() + rhs.vec3.getv1());
+	vec3.setv2(vec3.getv2() + rhs.vec3.getv2());
+	vec3.setv3(vec3.getv3() + rhs.vec3.getv3());
 	return *this;
 }
 
 FourVector& FourVector::operator-=(const FourVector& rhs)
 {
-	m_t -= rhs.m_t;
-	m_x -= rhs.m_x;
-	m_y -= rhs.m_y;
-	m_z -= rhs.m_z;
+	m_v0 -= rhs.m_v0;
+	vec3.setv1( vec3.getv1() - rhs.vec3.getv1() );
+	vec3.setv2( vec3.getv2() - rhs.vec3.getv2() );
+	vec3.setv3( vec3.getv3() - rhs.vec3.getv3() );
 	return *this;
 }
 
-FourVector& operator=(const MyClass& rhs)
+FourVector& FourVector::operator=(const FourVector& rhs)
 {
 	if (&rhs != this) {
-		m_t = rhs.m_t;
-		m_x = rhs.m_x;
-		m_y = rhs.m_y;
-		m_z = rhs.m_z;
+		m_v0 = rhs.m_v0;
+		vec3.setv1( rhs.vec3.getv1() );
+		vec3.setv2( rhs.vec3.getv2() );
+		vec3.setv3( rhs.vec3.getv3() );
 	} 
 	return *this;
 }
@@ -157,16 +160,16 @@ FourVector operator-(const FourVector& lhs, const FourVector& rhs)
 std::ostream& operator<<(std::ostream& stream, const FourVector& v)
 {
 	stream << "[";
-	stream << v.getT() << ", " << v.getX() << ", ";
-	stream << v.getY() << ", " << v.getZ() << "]";
+	stream << v.getv0() << ", " << v.getv1() << ", ";
+	stream << v.getv2() << ", " << v.getv3() << "]";
 	return stream;
 }
 
 std::istream& operator>>(std::istream& stream, FourVector& v)
 {
-	double t, x, y, z;
-	stream >> t >> x >> y >> z;
-	v.setT(t); v.setX(x); v.setY(y); v.setZ(z);
+	double v0, v1, v2, v3;
+	stream >> v0 >> v1 >> v2 >> v3;
+	v.setv0(v0); v.setv1(v1); v.setv2(v2); v.setv3(v3);
 	return stream;
 }
 

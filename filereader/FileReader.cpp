@@ -89,6 +89,21 @@ std::string FileReader::getFieldAsString(const int n) {
     return rval;
 }
 
+template <typename T>
+T FileReader::getField(const int n) {
+	failed = false;
+	std::istringstream ist(line);
+  this->skip_fields(ist, n-1);
+  T rval = T();
+  ist >> rval;
+  if (ist.fail()) {
+    failed = true;
+    return T(0);
+  }
+  else
+    return rval;
+}
+
 bool FileReader::inputFailed() const {
   return failed;
 }
