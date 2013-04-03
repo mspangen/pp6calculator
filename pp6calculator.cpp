@@ -508,7 +508,7 @@ void MenuWeek4()
 	std::cout << "Week 4\n";
 	std::cout << "==================================================\n";
 	std::cout << "r) Read in data from PDG database\n";
-	std::cout << "q)  Quit to main menu\n";
+	std::cout << "q) Quit to main menu\n";
 	std::cout << "--------------------------------------------------\n";
 
 	while (true) {
@@ -520,7 +520,7 @@ void MenuWeek4()
 
 		//=====================================
 
-		if (operation == "bz") {
+		if (operation == "r") {
 
 			std::cout << "Read in data rom PDG database. " << std::endl;
 			std::cout << "Please state the relative location of the data file:" << std::endl;
@@ -533,9 +533,20 @@ void MenuWeek4()
 				continue;
 			}
 
-			f.nextLine(); // Skip first line
+			std::vector<std::string> ptype;
+			std::vector<int> val1;
+			std::vector<int> val2;
+			std::vector<double> val3;
+
 			while (f.nextLine()) {
-				std::cout << f.getField<std::string>(1) << ", " << f.getField<int>(2) << ", " << f.getField<int>(3) << ", " << f.getField<double>(4) << std::endl;
+				ptype.push_back(f.getField<std::string>(1));
+				val1.push_back(f.getField<int>(2));
+				val2.push_back(f.getField<int>(3));
+				val3.push_back(f.getField<double>(4));
+			}
+
+			for (unsigned int i=0; i<ptype.size(); ++i) {
+				std::cout << ptype.at(i) << ", " << val1.at(i) << ", " << val2.at(i) << ", " << val3.at(i) << std::endl;
 			}
 
 		}
