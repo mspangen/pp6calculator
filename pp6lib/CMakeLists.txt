@@ -10,4 +10,6 @@ add_library( pp6lib STATIC
              threevector.hpp
              particle.cpp
              particle.hpp
+             particleinfo.cpp
+             particleinfo.hpp
            )

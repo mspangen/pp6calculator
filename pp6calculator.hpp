@@ -2,6 +2,7 @@
 #define _PP6CALC_HPP_
 
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <vector>
 #include <ctime>

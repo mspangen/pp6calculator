@@ -4,6 +4,7 @@
 #include "pp6lib/string_interpret.hpp"
 #include "pp6lib/fourvector.hpp"
 #include "pp6lib/particle.hpp"
+#include "pp6lib/particleinfo.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -507,7 +508,8 @@ void MenuWeek4()
 	std::cout << "==================================================\n";
 	std::cout << "Week 4\n";
 	std::cout << "==================================================\n";
-	std::cout << "r) Read in data from PDG database\n";
+	std::cout << "r)  Read in data from PDG file\n";
+	std::cout << "pi) Create and test a ParticleInfo class to read PDG file\n";
 	std::cout << "q) Quit to main menu\n";
 	std::cout << "--------------------------------------------------\n";
 
@@ -545,9 +547,45 @@ void MenuWeek4()
 				val3.push_back(f.getField<double>(4));
 			}
 
-			for (unsigned int i=0; i<ptype.size(); ++i) {
-				std::cout << ptype.at(i) << ", " << val1.at(i) << ", " << val2.at(i) << ", " << val3.at(i) << std::endl;
+			std::vector<std::string>::iterator iter0 = ptype.begin();
+			std::vector<int>::iterator iter1 = val1.begin();
+			std::vector<int>::iterator iter2 = val2.begin();
+			std::vector<double>::iterator iter3 = val3.begin();
+
+			for ( ; iter0 != ptype.end(); ++iter0) {
+				std::cout << std::setw(10) << std::left  << *iter0
+				          << std::setw(5)  << std::right << *iter1
+									<< std::setw(4)  << std::right << *iter2
+									<< std::setw(10) << std::right << *iter3 << std::endl;
+
+				++iter1;
+				++iter2;
+				++iter3;
 			}
+
+		}
+
+		//===================================
+
+		else if (operation == "pi") {
+			std::cout << "Create ParticleInfo class from file. " << std::endl;
+			std::cout << "Please state the relative location of the data file:" << std::endl;
+			std::string file;
+			std::cin >> file;
+
+			FileReader f(file);
+			if (!f.isValid()) {
+				std::cout << "File was not found!" << std::endl;
+				continue;
+			}
+
+			ParticleInfo database(file);
+
+			std::cout << "Testing the created ParticleInfo class:" << std::endl;
+			std::cout << "name of pdgID 521: " << database.getName(521) << std::endl;
+			std::cout << "pdgID of K+: " << database.getPDGCode(std::string("K+")) << std::endl;
+			std::cout << "mass of electron in MeV: " << database.getMassMeV(11) << std::endl;
+			std::cout << "mass of electron in GeV: " << database.getMassGeV(11) << std::endl;
 
 		}
 
