@@ -1,5 +1,5 @@
-#ifndef __PARTICLE_H__
-#define __PARTICLE_H__
+#ifndef __PARTICLE_HPP__
+#define __PARTICLE_HPP__
 
 #include "fourvector.hpp"
 
@@ -7,7 +7,7 @@ class Particle {
 
 public:
 
-	Particle ();
+	Particle ()	{ m_mass = 0, m_pvec = FourVector(0,0,0,0); };
 	Particle (const double mass, const double px, const double py, const double pz);
 	~Particle ();
 
@@ -16,8 +16,10 @@ public:
 	double getPx () const;
 	double getPy () const;
 	double getPz () const;
+	ThreeVector getThreeMomentum () const;
+	FourVector getFourMomentum () const;
 
-	void boost(const double beta, const double b1, const double b2, const double b3);
+	void boost (const double beta, const double b1, const double b2, const double b3);
 
 private:
 

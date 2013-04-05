@@ -48,6 +48,39 @@ void ThreeVector::setv3 (const double v3)
 	calcLength();
 }
 
+double ThreeVector::dot (const ThreeVector& V) 
+{
+	return m_v1*V.getv1() + m_v2*V.getv2() + m_v3*V.getv3();
+}
+
+
+// Operators
+
+ThreeVector& ThreeVector::operator+=(const ThreeVector& rhs)
+{
+	m_v1 += rhs.getv1();
+	m_v2 += rhs.getv2();
+	m_v3 += rhs.getv3();
+	return *this;
+}
+
+ThreeVector& ThreeVector::operator-=(const ThreeVector& rhs)
+{
+	m_v1 -= rhs.getv1();
+	m_v2 -= rhs.getv2();
+	m_v3 -= rhs.getv3();
+	return *this;
+}
+
+ThreeVector& ThreeVector::operator=(const ThreeVector& rhs)
+{
+	if (&rhs != this) {
+		m_v1 = rhs.getv1();
+		m_v2 = rhs.getv2();
+		m_v3 = rhs.getv3();
+	} 
+	return *this;
+}
 
 
 // Private functions
@@ -58,3 +91,18 @@ void ThreeVector::calcLength ()
 }
 
 
+// Outside class. Should not be in class scope!
+
+ThreeVector operator+(const ThreeVector& lhs, const ThreeVector& rhs)
+{
+	ThreeVector temp(lhs);
+	temp += rhs;
+	return temp;
+}
+
+ThreeVector operator-(const ThreeVector& lhs, const ThreeVector& rhs)
+{
+	ThreeVector temp(lhs);
+	temp -= rhs;
+	return temp;
+}

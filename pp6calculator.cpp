@@ -1,10 +1,6 @@
-
 #include "pp6calculator.hpp"
-#include "pp6lib/pp6math.hpp"
-#include "pp6lib/string_interpret.hpp"
-#include "pp6lib/fourvector.hpp"
-#include "pp6lib/particle.hpp"
-#include "pp6lib/particleinfo.hpp"
+
+int random100() { return (std::rand()%100); } // Function to generate random numbers in the range [0,100]
 
 int main(int argc, char* argv[])
 {
@@ -510,7 +506,11 @@ void MenuWeek4()
 	std::cout << "==================================================\n";
 	std::cout << "r)  Read in data from PDG file\n";
 	std::cout << "pi) Create and test a ParticleInfo class to read PDG file\n";
-	std::cout << "q) Quit to main menu\n";
+	std::cout << "al) Algorithm test manipulating a vector\n";
+	std::cout << "m)  Produce ordered list of invariant masses formed\n";
+	std::cout << "    between mu+mu- pairs in run4.dat using FileReader,\n";
+	std::cout << "    ParticleInfo and Particle classes.\n";
+	std::cout << "q)  Quit to main menu\n";
 	std::cout << "--------------------------------------------------\n";
 
 	while (true) {
@@ -586,6 +586,107 @@ void MenuWeek4()
 			std::cout << "pdgID of K+: " << database.getPDGCode(std::string("K+")) << std::endl;
 			std::cout << "mass of electron in MeV: " << database.getMassMeV(11) << std::endl;
 			std::cout << "mass of electron in GeV: " << database.getMassGeV(11) << std::endl;
+
+		}
+
+		//===================================
+
+		else if (operation == "al") {
+			std::cout << "Creating vector with 10 elements and filling it with random integers." << std::endl;
+			std::vector<int> myvector (10);
+			std::srand(unsigned(std::time(0))); // Create seed for random generation of numbers
+			std::generate (myvector.begin(), myvector.end(), random100); // Fill vector with random numbers in the range [0,100]
+
+			std::cout << "The vector contains the following numbers:" << std::endl;
+			std::copy(myvector.begin(),myvector.end(),std::ostream_iterator<int>(std::cout,"\n")); // Output contents of vector to screen
+			std::cout << "--------------------------------" << std::endl;
+
+			// Output smallest and largest value in vector
+			int minimum = *std::min_element(myvector.begin(),myvector.end());
+			int maximum = *std::max_element(myvector.begin(),myvector.end());
+			std::cout << "Smallest entry: " << minimum << ", largest entry: " << maximum << std::endl;
+			std::cout << "--------------------------------" << std::endl;
+
+			std::sort(myvector.begin(),myvector.end()); // Sort vector in ascending order
+			std::cout << "Sorting vector entries in ascending order. The ording is now:" << std::endl;
+			std::copy(myvector.begin(),myvector.end(),std::ostream_iterator<int>(std::cout,"\n")); // Output contents of vector to screen
+
+
+		}
+
+		//===================================
+
+
+		else if (operation == "m") {
+
+			std::cout << "Create ParticleInfo class from file. " << std::endl;
+			std::cout << "Please enter the relative location of the PDG file:" << std::endl;
+			std::string file;
+			std::cin >> file;
+
+			FileReader f(file);
+			if (!f.isValid()) {
+				std::cout << "File was not found!" << std::endl;
+				continue;
+			}
+
+			ParticleInfo database(file);
+			int pdgID = database.getPDGCode(std::string("mu+"));
+			double mumass = database.getMassGeV(pdgID);
+			
+			std::cout << "mumass = " << mumass << std::endl;
+
+			std::cout << "Please enter the relative location of the data file:" << std::endl;
+			std::string datafile;
+			std::cin >> datafile;
+
+			FileReader f2(datafile);
+			if (!f2.isValid()) {
+				std::cout << "File was not found!" << std::endl;
+				continue;
+			}
+
+			std::vector<Particle> mu_p; // Vector to contain mu+ particles
+			std::vector<Particle> mu_m; // Vector to contain mu- particles
+
+			std::string tempstring;
+
+			f2.nextLine(); // Skip first line
+			while (f2.nextLine()) {
+				if (f2.getFieldAsString(6) == "run4.dat") {
+					
+					tempstring = f2.getFieldAsString(2); // Read particle type
+					if (tempstring == "mu+") {
+						mu_p.push_back(Particle(mumass,f2.getFieldAsDouble(3),f2.getFieldAsDouble(4),f2.getFieldAsDouble(5)));
+					}
+					else if (tempstring == "mu-") {
+						mu_m.push_back(Particle(mumass,f2.getFieldAsDouble(3),f2.getFieldAsDouble(4),f2.getFieldAsDouble(5)));
+					}
+
+				}
+			}
+
+			// Now we have all the mu+ and mu- particles in two vectors,
+			// so we can calculate invariant masses of all combinations.
+
+			std::vector<massTuple> invmassvec;
+
+			for (unsigned int i=0; i<mu_p.size(); ++i) {
+				for (unsigned int j=0; j<mu_m.size(); ++j) {
+					if (i>=j) {
+						double im = InvMass(mu_p.at(i),mu_m.at(j));
+						invmassvec.push_back(makeMassTuple(im,i,j));
+					}
+				}
+			}
+
+			std::sort(invmassvec.begin(),invmassvec.end(),compareMassTuple); // Sort the invariant masses in ascending order
+
+			std::cout << "InvMass  mu+  mu-\n";
+			std::vector<massTuple>::iterator it;
+			for (it = invmassvec.begin(); it != invmassvec.end(); ++it) {
+				printf("%8f %3d %3d\n",(*it).invMass,(*it).i_p,(*it).i_m);
+			}
 
 		}
 

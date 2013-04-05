@@ -11,7 +11,7 @@ Particle::Particle (const double mass, const double px, const double py, const d
 	calcEnergy();
 }
 
-Particle::~Particle()
+Particle::~Particle ()
 {
 }
 
@@ -42,7 +42,17 @@ double Particle::getPz () const
 	return m_pvec.getv3();
 }
 
-void Particle::boost(const double beta, const double b1, const double b2, const double b3)
+ThreeVector Particle::getThreeMomentum () const
+{
+	return m_pvec.getThreeVector();
+}
+
+FourVector Particle::getFourMomentum () const
+{
+	return m_pvec;
+}
+
+void Particle::boost (const double beta, const double b1, const double b2, const double b3)
 {
 	m_pvec.boost(beta,b1,b2,b3);
 }
@@ -51,5 +61,6 @@ void Particle::boost(const double beta, const double b1, const double b2, const 
 
 void Particle::calcEnergy ()
 {
-	m_pvec.setv0( Square(m_pvec.getv1()) + Square(m_pvec.getv2()) + Square(m_pvec.getv3()) + Square(m_mass) );
+	ThreeVector p = m_pvec.getThreeVector();
+	m_pvec.setv0( sqrt(p.dot(p) + m_mass*m_mass) );
 }

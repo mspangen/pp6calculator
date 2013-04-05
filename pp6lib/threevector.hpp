@@ -20,6 +20,14 @@ public:
 	void setv2 (const double v2);
 	void setv3 (const double v3);
 
+	double dot (const ThreeVector& V);
+
+	// Operators
+
+	ThreeVector& operator+=(const ThreeVector& rhs);
+	ThreeVector& operator-=(const ThreeVector& rhs);
+	ThreeVector& operator=(const ThreeVector& rhs);
+
 private:
 
 	double m_v1, m_v2, m_v3;
@@ -30,5 +38,11 @@ private:
 
 
 };
+
+// Operators outside class!
+
+ThreeVector operator+(const ThreeVector& lhs, const ThreeVector& rhs);
+ThreeVector operator-(const ThreeVector& lhs, const ThreeVector& rhs);
+
 
 #endif

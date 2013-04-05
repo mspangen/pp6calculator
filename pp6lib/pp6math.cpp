@@ -73,6 +73,15 @@ double InvMass (double m1, double m2, double p1x, double p1y, double p1z, double
 	return sqrt( m1*m1 + m2*m2 + 2*(E1*E2 - p1x*p2x - p1y*p2y - p1z*p2z) );
 }
 
+double InvMass (const Particle& p1, const Particle& p2)
+{
+	double E1 = p1.getEnergy();
+	double E2 = p2.getEnergy();
+	ThreeVector psum = p1.getThreeMomentum()+p2.getThreeMomentum();
+
+	return sqrt( Square(E1 + E2) - psum.dot(psum) );
+}
+
 
 //====================================
 // Sorting
